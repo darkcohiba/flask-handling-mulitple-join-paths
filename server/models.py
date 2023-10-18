@@ -1,4 +1,4 @@
-from sqlalchemy.orm import validates, relationship
+from sqlalchemy.orm import validates
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -13,8 +13,8 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String)
     _password_hash = db.Column(db.String, nullable=False)
 
-    requestor = db.relationship('FriendShip', back_populates="requestor")
-    requested = db.relationship('FriendShip', back_populates="requested")
+    requestor = db.relationship('FriendShip', foreign_keys='FriendShip.requestor_id', back_populates="requestor_relation")
+    requested = db.relationship('FriendShip', foreign_keys='FriendShip.requested_id', back_populates="requested_relation")
 
 
 
@@ -39,8 +39,5 @@ class FriendShip(db.Model, SerializerMixin):
     requestor_id = db.Column(db.Integer, db.ForeignKey("users_table.id"))
     requested_id = db.Column(db.Integer, db.ForeignKey("users_table.id"))
 
-
-    requestor = db.relationship('User', back_populates="requestor")
-    requested = db.relationship('User', back_populates="requested")
-    # requestor = db.relationship('User', back_populates="requestor", foreign_keys=[requestor_id])
-    # requested = db.relationship('User', back_populates="requested", foreign_keys=[requested_id])
+    requestor_relation = db.relationship('User',foreign_keys=[requestor_id], back_populates="requestor" )
+    requested_relation = db.relationship('User', foreign_keys=[requested_id], back_populates="requested")
