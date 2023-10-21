@@ -13,8 +13,8 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String)
     _password_hash = db.Column(db.String, nullable=False)
 
-    requestor = db.relationship('FriendShip', foreign_keys='FriendShip.requestor_id', back_populates="requestor_relation")
-    requested = db.relationship('FriendShip', foreign_keys='FriendShip.requested_id', back_populates="requested_relation")
+    requestor = db.relationship('FriendShip', foreign_keys='FriendShip.requestor_id', back_populates="requestor_relation", lazy="joined")
+    requested = db.relationship('FriendShip', foreign_keys='FriendShip.requested_id', back_populates="requested_relation", lazy="joined")
 
 
 
@@ -39,5 +39,5 @@ class FriendShip(db.Model, SerializerMixin):
     requestor_id = db.Column(db.Integer, db.ForeignKey("users_table.id"))
     requested_id = db.Column(db.Integer, db.ForeignKey("users_table.id"))
 
-    requestor_relation = db.relationship('User',foreign_keys=[requestor_id], back_populates="requestor" )
-    requested_relation = db.relationship('User', foreign_keys=[requested_id], back_populates="requested")
+    requestor_relation = db.relationship('User',foreign_keys=[requestor_id], back_populates="requestor", lazy="joined" )
+    requested_relation = db.relationship('User', foreign_keys=[requested_id], back_populates="requested", lazy="joined")
